@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BudgetBasket — Eat Well, Spend Less</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-brand">
+    <div class="nav-icon">🧺</div>
+    <div class="brand-text">Budget<span>Basket</span></div>
+  </div>
+  <div class="nav-right">
+    <button class="settings-btn" onclick="openSettings()">⚙ Settings</button>
+    <a href="https://www.linkedin.com/in/" target="_blank" class="connect-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      Connect with Me
+    </a>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="hero-emoji">🥦</span>
+  <h1>Eat Well on<br><em>Any Budget</em></h1>
+  <p>Tell us what you have to spend. We'll build you a full day of real, delicious meals — nothing wasted, nothing missing.</p>
+  <div class="hero-tags">
+    <span class="tag">🍳 Breakfast</span>
+    <span class="tag">🥗 Lunch</span>
+    <span class="tag">🍲 Dinner</span>
+    <span class="tag">🍎 Snacks</span>
+    <span class="tag">💰 Budget Smart</span>
+  </div>
+</section>
+
+<div class="input-section">
+  <div class="budget-card">
+    <div class="budget-card-title">What's your budget?</div>
+    <div class="budget-card-sub">// enter amount → get your full meal plan</div>
+
+    <div class="budget-row" style="margin-bottom:20px">
+      <div class="form-field">
+        <label>Your Budget</label>
+        <div class="budget-amount-wrap">
+          <span class="currency-symbol" id="currencySymbol">$</span>
+          <input type="number" id="budgetInput" placeholder="15.00" min="1" step="0.50"/>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Meals to Plan</label>
+        <select id="mealCount">
+          <option value="3">3 meals (Full day)</option>
+          <option value="1">1 meal (Quick plan)</option>
+          <option value="2">2 meals (Breakfast + Dinner)</option>
+          <option value="4">4 meals (+ Snack)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-field" style="margin-bottom:20px">
+      <label>Dietary Preference</label>
+      <div class="diet-options">
+        <div class="diet-opt active" data-diet="omnivore" onclick="selectDiet(this)">🍖 Omnivore</div>
+        <div class="diet-opt" data-diet="vegetarian" onclick="selectDiet(this)">🥕 Vegetarian</div>
+        <div class="diet-opt" data-diet="vegan" onclick="selectDiet(this)">🌱 Vegan</div>
+        <div class="diet-opt" data-diet="glutenfree" onclick="selectDiet(this)">🌾 Gluten-Free</div>
+      </div>
+    </div>
+
+    <button class="generate-btn" onclick="generateMealPlan()">
+      <span>🧺</span> Build My Meal Plan
+    </button>
+
+    <div class="meter-section" id="meterSection">
+      <div class="meter-label">
+        <span>Budget Used</span>
+        <span id="meterLabel">$0.00 / $0.00</span>
+      </div>
+      <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="results-section" id="resultsSection">
+  <div class="results-header">
+    <div class="results-title">
+      Your Meal Plan
+      <span id="resultsSubtitle">Full day • Omnivore • $15.00 budget</span>
+    </div>
+    <button class="reset-btn" onclick="resetPlan()">↩ New Plan</button>
+  </div>
+  <div class="meals-grid" id="mealsGrid"></div>
+  <div class="summary-card" id="summaryCard"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this)closeSettings()">
+  <div class="settings-panel">
+    <div class="settings-header">
+      <div class="settings-title">🛠 Preferences</div>
+      <button class="settings-close" onclick="closeSettings()">✕</button>
+    </div>
+
+    <div class="setting-item">
+      <span class="setting-label">Appearance</span>
+      <div class="toggle-row">
+        <span class="toggle-label">🌙 Dark Mode</span>
+        <label class="toggle"><input type="checkbox" id="darkToggle" onchange="toggleDark(this)"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="setting-item">
+      <span class="setting-label">Currency</span>
+      <select class="currency-select" id="currencySelect" onchange="setCurrency(this.value)">
+        <option value="$">$ — US Dollar</option>
+        <option value="£">£ — British Pound</option>
+        <option value="€">€ — Euro</option>
+        <option value="₦">₦ — Nigerian Naira</option>
+        <option value="₵">₵ — Ghanaian Cedi</option>
+        <option value="R">R — South African Rand</option>
+        <option value="₹">₹ — Indian Rupee</option>
+        <option value="C$">C$ — Canadian Dollar</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <span class="setting-label">Default Meals per Day</span>
+      <select class="meal-count-select" onchange="document.getElementById('mealCount').value=this.value">
+        <option value="3">3 meals (recommended)</option>
+        <option value="2">2 meals</option>
+        <option value="4">4 meals</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <span class="setting-label">Display Options</span>
+      <div class="toggle-row">
+        <span class="toggle-label">Show calorie estimates</span>
+        <label class="toggle"><input type="checkbox" id="calToggle" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="basket-loader">🧺</div>
+  <div class="loading-text">Filling your basket...</div>
+  <div class="loading-sub">// calculating best meals for your budget</div>
+</div>
+
+<footer>
+  <div class="footer-brand">🧺 BudgetBasket</div>
+  <div class="footer-copy">No data collected. Fully local. Open source spirit.</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
